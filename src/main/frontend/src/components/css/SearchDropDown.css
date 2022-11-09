@@ -1,0 +1,11 @@
+div.dropDownBox{
+    display:flex;
+    flex-direction: column;
+    background-color: white;
+    border: 1px solid black;
+    border-top: none;
+    border-bottom: none;
+}
+div.elementFrame{
+    border-bottom: 1px solid black;
+}

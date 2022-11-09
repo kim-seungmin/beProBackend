@@ -1,0 +1,26 @@
+.contentFrame{
+    display: flex;
+    justify-content: space-evenly;
+}
+.sideBarFrame{
+    padding-top: 30px;
+    list-style: none;
+    border: 1px solid;
+    padding-left: 7px;
+    padding-right: 7px;
+}
+.sideBarTitle{
+    font-size: 15pt;
+    padding: 5px 10px;
+    border-bottom : 1px solid darkolivegreen;
+    margin-bottom: 10px;
+}
+.sideBarContentFrame{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    border : 1px solid darkolivegreen;
+}
+.sideBarContentFrame div{
+    margin-bottom: 7px;
+}

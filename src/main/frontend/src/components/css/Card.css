@@ -1,0 +1,35 @@
+div.cardArea{
+    display: flex;
+    padding: 5px;
+    justify-content: space-around;
+    
+}
+div.cardFrame{
+    width:900px;
+}
+/*@media (min-width:992px){
+    div.card{
+        width:100%;
+    }
+}
+@media (min-width:1200px){
+    div.card{
+        width:400px;
+    }
+}*/
+div.card{
+    margin-right: 20px;
+    width:100%;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid darkolivegreen;
+}
+div.cardTitle{
+    font-size: 15pt;
+    padding: 5px 10px;
+    border-bottom : 1px solid darkolivegreen;
+}
+div.cardDetail{
+    padding-top: 10px;
+    padding-bottom: 10px;
+}

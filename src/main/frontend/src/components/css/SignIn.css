@@ -1,0 +1,80 @@
+@font-face {
+    font-family: "MapleFont";
+    src: url("../fonts/Maplestory\ Light.ttf");
+  }
+.modal{
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.6);
+}
+.loginModal{
+    width: 480px;
+    height: fit-content;
+    background-color: white;
+    position: relative;
+    box-sizing: border-box;
+    margin: 50px auto;
+    padding: 20px;
+    background: #fff; 
+}
+.close{
+    position:absolute;
+    top:12px;
+    right:20px;
+    cursor: pointer;
+    font-size: 25px;
+    z-index:1000;
+}
+.modalContents{
+    margin: 0 auto;
+    width: 100%;
+    position: relative;
+    padding: 0 10px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+.loginId{
+    margin-top: 30px;
+    border-radius: 2px;
+    width: 100%;
+    height: 40px;
+    border: 1px solid #e5e5e5;
+    padding: 9px 12px;
+    outline: none;
+    box-sizing: border-box;
+}
+input::placeholder{
+    color:#999999;
+}
+.loginPw{
+    margin-top: 15px;
+    border-radius: 2px;
+    width: 100%;
+    height: 40px;
+    border: 1px solid #e5e5e5;
+    padding: 9px 12px;
+    outline: none;
+    box-sizing: border-box;
+}
+.loginArea{
+    text-align: center;
+}
+.loginBtn{
+    font-family: MapleFont;
+    letter-spacing: 1px;
+    font-size:20px;
+    color:#817f7f;
+    background-color: transparent ;
+    border:0px;
+    cursor: pointer;
+}
+.loginBtn:hover{
+    text-shadow: 0 0 4px #fff, 0 0 8px #fff, 
+        0 0 12px #e2fff4, 0 0 15px #a1fff2;
+}
+    

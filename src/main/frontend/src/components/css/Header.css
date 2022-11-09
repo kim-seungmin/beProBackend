@@ -1,0 +1,126 @@
+@font-face {
+    font-family: "MapleFontBold";
+    src: url("../fonts/Maplestory\ Bold.ttf");
+  }
+@font-face {
+    font-family: "MapleFont";
+    src: url("../fonts/Maplestory\ Light.ttf");
+}
+
+@media (min-width : 1660px){
+    div.area{
+        padding-left : 44px;
+        padding-right : 44px;
+    }
+}
+a{
+    text-decoration: none;
+}
+div.area{
+    /*border-bottom: 1px solid #878787;*/
+    padding-right: 24px;
+    background-color: #31ffcb;
+}
+@media (min-width:1200px){
+    div.innerArea{
+        max-width: 1140px;
+    }
+}
+@media (min-width:1540px){
+    div.innerArea{
+        max-width: 1440px;
+    }
+}
+div.innerArea{
+    width: 100%;
+    padding-right: 14px;
+    padding-left:14px;
+    margin-right: auto;
+    margin-left:auto;
+}
+div.contentArea{
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 0 -0.25rem;
+}
+div.headerTitle{
+    font-family: "MapleFontBold";
+    font-size:25px;
+    background-color: rgb(239, 245, 245);
+    color:rgb(107, 55, 156);
+    letter-spacing: 1px;
+    margin: 10px;
+    padding:5px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    flex-shrink: 0;
+
+}
+div.headerTitle:hover{
+    text-shadow: 0 0 2px #fff, 0 0 4px #fff, 
+        0 0 6px #f363e7, 0 0 8px #f700ff;
+}
+
+div.headerTools{
+    margin-left: auto;
+    padding-top: 14px;
+    padding-bottom: 14px;
+}
+ul.headerToolTitle{
+    font-family: "MapleFont";
+    color:rgb(117, 90, 143);
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    margin: 0 -6px;
+    list-style: none;
+    padding: 0;
+}
+ul.headerToolTitle li{
+    cursor: pointer;
+    list-style:none;
+    padding: 0 10px;
+}
+ul.headerToolTitle li:hover{
+    text-shadow: 0 0 2px #fff, 0 0 4px #fff, 
+        0 0 6px #f7a6f0, 0 0 8px #fa74ff;
+}
+div.searchIcon{
+    margin-right: 10px;
+    cursor: pointer;
+}
+div.searchArea{
+    display: flex;
+    flex-direction: column;
+}
+div.searchFrame{
+    display:flex;
+    flex-direction: row;
+}
+/* title 
+h1.title { position: relative; }
+
+h1.title:before,
+h1.title:after {
+  content: '[';
+  display: inline-block;
+  position: relative;
+  top: 1px;
+  height: 100%;
+  font-size: 1.25em;
+  color: tomato;
+  
+  transition: all 0.5s ease;
+}
+
+h1.title:after { content: ']'; }
+
+h1.title:hover:before { 
+  transform: translateX(-5px);
+}
+
+h1.title:hover:after { 
+  transform: translateX(5px);
+}
+*/
