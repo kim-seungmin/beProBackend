@@ -2,6 +2,7 @@ package NoJobs.BePro.Controller;
 
 import NoJobs.BePro.Domain.Member;
 import NoJobs.BePro.Service.MemberService;
+import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -10,32 +11,41 @@ import java.util.*;
 
 @RestController
 public class MemberController {
+    private final MemberService memberService;
+    @Autowired
+    public MemberController(MemberService memberService) {
+        this.memberService = memberService;
+    }
 
-//    private String makeJwtToken(String userId, String nickname) {
-//        Date now = new Date();
-//        return Jwts.builder()
-//                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-//                .setIssuedAt(now)
-//                .claim("userId", userId)
-//                .claim("nickname", nickname)
-//                .signWith(SignatureAlgorithm.HS256, JWT_SECRET_KEY)
-//                .compact();
-//    }
+    @GetMapping("/user/signin")
+    public Map signIn(@RequestBody MemberForm form) throws Exception {
+        Member member = new Member();
+        member.setId(form.getId());
+        member.setPassword(form.getPw());
+
+        Map result = new HashMap<String,Object>();
+        Optional<Member> resultMember = memberService.login(member);
+        if(resultMember.isEmpty() ||resultMember.get().getName().equals("fail")){
+            result.put("loginSuccess", true);
+            result.put("nick", null);
+            result.put("msg", "로그인에 실패하였습니다.");
+            result.put("cookie", null);
+        }else{
+            result.put("loginSuccess", false);
+            result.put("nick", resultMember.get().getName());
+            result.put("msg", "로그인에 성공했습니다.");
+            result.put("cookie", resultMember.get().getToken());
+        }
+        return result;
+    }
 
     @GetMapping("/user/signout")
-    public Map home(String id) {
+    public Map signOut(String id) {
         Map result = new HashMap<String,Object>();
         result.put("id", id);
         result.put("id2", id);
         result.put("id3", id);
         return result;
-    }
-    //긁어온거
-    private final MemberService memberService;
-
-    @Autowired
-    public MemberController(MemberService memberService) {
-        this.memberService = memberService;
     }
 
     @PostMapping("/user/signup")
@@ -58,24 +68,19 @@ public class MemberController {
         return result;
     }
 
-    @RequestMapping("/members/all")
-    public List<Member> allList(Model model){
-        List<Member> members = memberService.findMembers();
-        return members;
-//        List<Member> members =  new ArrayList<>();
-//        Member a = new Member();
-//        a.setId("name");
-//        Member b = new Member();
-//        b.setId("name");
-//        members.add(a);
-//        members.add(b);
-//        return members;
-    }
+    @PostMapping("/user/idcheck")
+    public Map idCheck(@RequestBody MemberForm form){
+        Member member = new Member();
+        member.setId(form.getId());
 
-    @GetMapping("members")
-    public String list(Model model){
-        List<Member> members = memberService.findMembers();
-        model.addAttribute("members",members);
-        return "members/memberList";
+        Map result = new HashMap<String,Object>();
+        if(memberService.validateDuplicateMember(member)){
+            result.put("idCheckSuccess", true);
+            result.put("msg", "사용해도 좋습니다.");
+        }else{
+            result.put("idCheckSuccess", false);
+            result.put("msg", "중복된 아이디가 존재합니다.");
+        }
+        return result;
     }
 }

@@ -8,4 +8,5 @@ public interface MemberRepository {
     Optional<Member> findById(String id);
     Optional<Member> findByName(String name);
     List<Member> findAll();
+    boolean updateToken(Member member,String token);
 }

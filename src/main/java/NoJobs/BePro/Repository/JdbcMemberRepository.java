@@ -1,7 +1,6 @@
 package NoJobs.BePro.Repository;
 
 import NoJobs.BePro.Domain.Member;
-import NoJobs.BePro.Tool.SecureTool;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import javax.sql.DataSource;
 import java.sql.*;
@@ -16,13 +15,6 @@ public class JdbcMemberRepository implements MemberRepository {
     }
     @Override
     public Member save(Member member) {
-
-        SecureTool st = new SecureTool();
-        try {
-            member.setPassword(st.makePassword(member.getPassword(), member.getId()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         String sql = "insert into member(member_id, member_password, member_email, member_nickname, member_major) values(?,?,?,?,?)";
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -106,6 +98,29 @@ public class JdbcMemberRepository implements MemberRepository {
             close(conn, pstmt, rs);
         }
     }
+
+    @Override
+    public boolean updateToken(Member member,String token) {
+        String sql = "update member set member_token = ? where member_id = ?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, token);
+            pstmt.setString(2, member.getId());
+            rs = pstmt.executeQuery();
+
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        } finally {
+            close(conn, pstmt, rs);
+        }
+
+        return true;
+    }
+
     @Override
     public Optional<Member> findByName(String name) {
         String sql = "select * from member where member_nickname = ?";

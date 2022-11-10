@@ -3,8 +3,12 @@ package NoJobs.BePro.Service;
 import NoJobs.BePro.Domain.Member;
 import NoJobs.BePro.Repository.MemberRepository;
 
+import NoJobs.BePro.Tool.SecureTool;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,19 +22,25 @@ public class MemberService {
 
     /* 회원가입*/
     public String join(Member member){
+        SecureTool st = new SecureTool();
 
-        if(!validateDuplicateMember(member)){ //중복회원검증
+        if(validateDuplicateMember(member)){ //중복회원검증
             return("이미 존재하는 회원입니다.");
+        }
+        try {
+            member.setPassword(st.makePassword(member.getPassword(), member.getId()));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         memberRepository.save(member);
         return("success");
     }
 
-    private boolean validateDuplicateMember(Member member) {
+    public boolean validateDuplicateMember(Member member) {
         if(memberRepository.findById(member.getId()).isPresent()) {
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     public List<Member> findMembers(){
@@ -40,5 +50,35 @@ public class MemberService {
     public Optional<Member> findOne(String memberId){
         return memberRepository.findById(memberId);
     }
+
+    //로그인
+
+    public Optional<Member> login(Member member) throws Exception {
+        SecureTool st = new SecureTool();
+        Optional<Member> DBMember = findOne(member.getId());
+        Optional<Member> resultMember = Optional.empty();
+        resultMember.get().setId(member.getId());
+        resultMember.get().setId(member.getId());
+        //ID검증
+        if(!DBMember.isPresent()){
+            resultMember.get().setToken("err");
+            return resultMember;
+        }
+        resultMember.get().setName(DBMember.get().getName());
+        //비밀번호검증
+        member.setPassword(st.makePassword(member.getId(), member.getPassword()));
+        if(member.getPassword()!=DBMember.get().getPassword()){
+            resultMember.get().setToken("err");
+            return resultMember;
+        }
+        String token = st.makeJwtToken(member.getId(),member.getPassword());
+        if(this.memberRepository.updateToken(member, token)){
+            resultMember.get().setToken(token);
+            return resultMember;
+        }
+        resultMember.get().setToken("err");
+        return resultMember;
+    }
+
 
 }

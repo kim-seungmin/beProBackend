@@ -1,6 +1,11 @@
 package NoJobs.BePro.Tool;
 
+import io.jsonwebtoken.Header;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+
 import java.security.MessageDigest;
+import java.util.Date;
 
 public class SecureTool {
     private static final int STRETCH_SIZE = 1000;        //스트레칭 횟수
@@ -31,6 +36,17 @@ public class SecureTool {
 
     public String makePassword(String password, String id) throws Exception {
         return getHashValue(password,id);
+    }
+
+    public String makeJwtToken(String userId, String nickname) {
+        Date now = new Date();
+        return Jwts.builder()
+                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+                .setIssuedAt(now)
+                .claim("userId", userId)
+                .claim("nickname", nickname)
+                .signWith(SignatureAlgorithm.HS256, "bePro")
+                .compact();
     }
 
 }
