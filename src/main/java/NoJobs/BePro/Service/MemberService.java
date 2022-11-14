@@ -63,11 +63,9 @@ public class MemberService {
             resultMember.get().setToken("fail");
             return resultMember;
         }
-        System.out.println(DBMember.get().getPassword());
         resultMember.get().setName(DBMember.get().getName());
         //비밀번호검증
         member.setPassword(st.makePassword(member.getPassword(),member.getId()));
-        System.out.println(member.getPassword());
         if(!Objects.equals(member.getPassword(), DBMember.get().getPassword())){
             resultMember.get().setToken("fail");
             return resultMember;
