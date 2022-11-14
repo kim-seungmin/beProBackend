@@ -57,6 +57,7 @@ public class JdbcMemberRepository implements MemberRepository {
             if(rs.next()) {
                 Member member = new Member();
                 member.setId(rs.getString("member_id"));
+                member.setPassword(rs.getString("member_password"));
                 member.setName(rs.getString("member_nickname"));
                 member.setIdNum(rs.getLong("member_idnum"));
                 member.setMajor(rs.getString("member_major"));
@@ -104,18 +105,29 @@ public class JdbcMemberRepository implements MemberRepository {
         String sql = "update member set member_token = ? where member_id = ?";
         Connection conn = null;
         PreparedStatement pstmt = null;
-        ResultSet rs = null;
         try {
             conn = getConnection();
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, token);
             pstmt.setString(2, member.getId());
-            rs = pstmt.executeQuery();
-
+            pstmt.execute();
         } catch (Exception e) {
             throw new IllegalStateException(e);
         } finally {
-            close(conn, pstmt, rs);
+            if (pstmt != null) {
+                try {
+                    pstmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         return true;

@@ -2,7 +2,6 @@ package NoJobs.BePro.Controller;
 
 import NoJobs.BePro.Domain.Member;
 import NoJobs.BePro.Service.MemberService;
-import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,12 +25,12 @@ public class MemberController {
         Map result = new HashMap<String,Object>();
         Optional<Member> resultMember = memberService.login(member);
         if(resultMember.isEmpty() ||resultMember.get().getName().equals("fail")){
-            result.put("loginSuccess", true);
+            result.put("loginSuccess", false);
             result.put("nick", null);
             result.put("msg", "로그인에 실패하였습니다.");
             result.put("cookie", null);
         }else{
-            result.put("loginSuccess", false);
+            result.put("loginSuccess", true);
             result.put("nick", resultMember.get().getName());
             result.put("msg", "로그인에 성공했습니다.");
             result.put("cookie", resultMember.get().getToken());

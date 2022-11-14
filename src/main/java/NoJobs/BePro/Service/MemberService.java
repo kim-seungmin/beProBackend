@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 public class MemberService {
@@ -56,19 +57,19 @@ public class MemberService {
     public Optional<Member> login(Member member) throws Exception {
         SecureTool st = new SecureTool();
         Optional<Member> DBMember = findOne(member.getId());
-        Optional<Member> resultMember = Optional.empty();
-        resultMember.get().setId(member.getId());
-        resultMember.get().setId(member.getId());
+        Optional<Member> resultMember = Optional.of(member);
         //ID검증
-        if(!DBMember.isPresent()){
-            resultMember.get().setToken("err");
+        if(DBMember.isEmpty()){
+            resultMember.get().setToken("fail");
             return resultMember;
         }
+        System.out.println(DBMember.get().getPassword());
         resultMember.get().setName(DBMember.get().getName());
         //비밀번호검증
-        member.setPassword(st.makePassword(member.getId(), member.getPassword()));
-        if(member.getPassword()!=DBMember.get().getPassword()){
-            resultMember.get().setToken("err");
+        member.setPassword(st.makePassword(member.getPassword(),member.getId()));
+        System.out.println(member.getPassword());
+        if(!Objects.equals(member.getPassword(), DBMember.get().getPassword())){
+            resultMember.get().setToken("fail");
             return resultMember;
         }
         String token = st.makeJwtToken(member.getId(),member.getPassword());
@@ -76,7 +77,7 @@ public class MemberService {
             resultMember.get().setToken(token);
             return resultMember;
         }
-        resultMember.get().setToken("err");
+        resultMember.get().setToken("fail");
         return resultMember;
     }
 
