@@ -74,7 +74,7 @@ public class MemberController {
         member.setId(form.getId());
 
         Map result = new HashMap<String,Object>();
-        if(memberService.validateDuplicateMember(member)){
+        if(!memberService.validateDuplicateMember(member)){
             result.put("idCheckSuccess", true);
             result.put("msg", "사용해도 좋습니다.");
         }else{
