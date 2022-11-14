@@ -17,7 +17,7 @@ public class MemberController {
         this.memberService = memberService;
     }
 
-    @GetMapping("/user/signin")
+    @PostMapping("/user/signin")
     public Map signIn(@RequestBody MemberForm form) throws Exception {
         Member member = new Member();
         member.setId(form.getId());
