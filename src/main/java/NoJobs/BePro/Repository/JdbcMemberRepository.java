@@ -101,31 +101,60 @@ public class JdbcMemberRepository implements MemberRepository {
     }
 
     @Override
-    public boolean updateToken(Member member,String token) {
-        String sql = "update member set member_token = ? where member_id = ?";
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        try {
-            conn = getConnection();
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, token);
-            pstmt.setString(2, member.getId());
-            pstmt.execute();
-        } catch (Exception e) {
-            throw new IllegalStateException(e);
-        } finally {
-            if (pstmt != null) {
-                try {
-                    pstmt.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
+    public boolean updateToken(Member member, Optional<String> token) {
+        if(token.isPresent()) {
+            String sql = "update member set member_token = ? where member_id = ?";
+            Connection conn = null;
+            PreparedStatement pstmt = null;
+            try {
+                conn = getConnection();
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1, token.get());
+                pstmt.setString(2, member.getId());
+                pstmt.execute();
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            } finally {
+                if (pstmt != null) {
+                    try {
+                        pstmt.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (conn != null) {
+                    try {
+                        conn.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
+        }else{
+            String sql = "update member set member_token = null where member_id = ?";
+            Connection conn = null;
+            PreparedStatement pstmt = null;
+            try {
+                conn = getConnection();
+                pstmt = conn.prepareStatement(sql);
+                pstmt.setString(1, member.getId());
+                pstmt.execute();
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            } finally {
+                if (pstmt != null) {
+                    try {
+                        pstmt.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (conn != null) {
+                    try {
+                        conn.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

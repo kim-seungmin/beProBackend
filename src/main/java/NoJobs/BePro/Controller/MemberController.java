@@ -39,11 +39,18 @@ public class MemberController {
     }
 
     @GetMapping("/user/signout")
-    public Map signOut(String id) {
+    public Map signOut(@RequestBody MemberForm form) throws Exception {
         Map result = new HashMap<String,Object>();
-        result.put("id", id);
-        result.put("id2", id);
-        result.put("id3", id);
+        Member member = new Member();
+
+        member.setId(form.getId());
+        if(memberService.logout(member)){
+            result.put("signOutSuccess", true);
+            result.put("msg", "로그아웃에 성공했습니다");
+        }else{
+            result.put("signOutSuccess", false);
+            result.put("msg", "알 수 없는 이유로 실패했습니다");
+        }
         return result;
     }
 

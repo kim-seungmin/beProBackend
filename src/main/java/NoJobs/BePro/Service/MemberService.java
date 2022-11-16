@@ -37,6 +37,7 @@ public class MemberService {
         return("success");
     }
 
+    //멤버확인
     public boolean validateDuplicateMember(Member member) {
         if(memberRepository.findById(member.getId()).isPresent()) {
             return true;
@@ -53,17 +54,18 @@ public class MemberService {
     }
 
     //로그인
-
     public Optional<Member> login(Member member) throws Exception {
         SecureTool st = new SecureTool();
-        Optional<Member> DBMember = findOne(member.getId());
+
         Optional<Member> resultMember = Optional.of(member);
         //ID검증
+        Optional<Member> DBMember = findOne(member.getId());
         if(DBMember.isEmpty()){
             resultMember.get().setToken("fail");
             return resultMember;
         }
         resultMember.get().setName(DBMember.get().getName());
+
         //비밀번호검증
         member.setPassword(st.makePassword(member.getPassword(),member.getId()));
         if(!Objects.equals(member.getPassword(), DBMember.get().getPassword())){
@@ -71,12 +73,20 @@ public class MemberService {
             return resultMember;
         }
         String token = st.makeJwtToken(member.getId(),member.getPassword());
-        if(this.memberRepository.updateToken(member, token)){
+        if(this.memberRepository.updateToken(member, Optional.of(token))){
             resultMember.get().setToken(token);
             return resultMember;
         }
         resultMember.get().setToken("fail");
         return resultMember;
+    }
+    
+    //로그아웃
+    public boolean logout(Member member) throws Exception {
+        if(this.memberRepository.updateToken(member, Optional.empty())){
+            return true;
+        }
+        return false;
     }
 
 
