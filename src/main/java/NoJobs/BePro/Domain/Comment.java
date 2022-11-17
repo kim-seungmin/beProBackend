@@ -1,4 +1,4 @@
 package NoJobs.BePro.Domain;
 
-public class comment {
+public class Comment {
 }

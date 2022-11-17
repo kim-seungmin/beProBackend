@@ -1,6 +1,6 @@
 package NoJobs.BePro.Domain;
 
-public class tag {
+public class Tag {
     private long id;
     private long postId;
     private String detail;
