@@ -38,7 +38,7 @@ public class MemberController {
         return result;
     }
 
-    @GetMapping("/user/signout")
+    @PostMapping("/user/signout")
     public Map signOut(@RequestBody MemberForm form) throws Exception {
         Map result = new HashMap<String,Object>();
         Member member = new Member();
