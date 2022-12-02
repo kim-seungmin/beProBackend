@@ -23,4 +23,9 @@ public class TagService {
         return tagRepository.findAll();
     }
 
+
+    public String[] getRank(int start, int end) {
+        List<String> rank = tagRepository.getRank(start, end);
+        return rank.toArray(new String[rank.size()]);
+    }
 }

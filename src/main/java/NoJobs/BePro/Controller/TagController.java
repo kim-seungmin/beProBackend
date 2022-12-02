@@ -34,4 +34,9 @@ public class TagController {
 
     }
 
+    @GetMapping("/get/hashtagrank")
+    public String[] getTagRank(){
+        return tagService.getRank(0,10);
+    }
+
 }

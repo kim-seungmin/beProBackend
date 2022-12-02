@@ -9,4 +9,6 @@ public interface TagRepository {
     Optional<Tag> findByPostId(Long id);
     Optional<Tag> findByDetail(String detail);
     List<Tag> findAll();
+
+    List<String> getRank(int start, int end);
 }

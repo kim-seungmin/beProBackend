@@ -1,5 +1,4 @@
 package NoJobs.BePro.Domain;
-import java.util.List;
 
 public class Post {
     private long id;

@@ -56,6 +56,35 @@ public class JdbcTagRepository implements TagRepository {
         }
     }
 
+    @Override
+    public List<String> getRank(int start, int end) {
+        String sql = "SELECT tag_detail, COUNT(tag_detail) FROM tag GROUP BY tag_detail";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection();
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+            List<String> result = new ArrayList<>();
+            for(int i=0;i<start;i++){
+                if(!rs.next())return result;
+            }
+            for(int i=start; i<end;i++){
+                if(rs.next()){
+                    result.add(rs.getString("tag_detail"));
+                }else {
+                    return result;
+                }
+            }
+            return result;
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        } finally {
+            close(conn, pstmt, rs);
+        }
+    }
+
     private Connection getConnection() {
         return DataSourceUtils.getConnection(dataSource);
     }
