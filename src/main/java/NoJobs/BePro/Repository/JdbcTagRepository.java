@@ -32,7 +32,7 @@ public class JdbcTagRepository implements TagRepository {
 
     @Override
     public List<Tag> findAll() {
-        String sql = "select * from tag";
+        String sql = "select * from tag GROUP BY tag_detail";
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -58,7 +58,7 @@ public class JdbcTagRepository implements TagRepository {
 
     @Override
     public List<String> getRank(int start, int end) {
-        String sql = "SELECT tag_detail, COUNT(tag_detail) FROM tag GROUP BY tag_detail";
+        String sql = "SELECT tag_detail, COUNT(tag_detail) AS num FROM tag GROUP BY tag_detail ORDER BY num DESC";
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;

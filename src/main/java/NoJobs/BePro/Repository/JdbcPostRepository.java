@@ -67,7 +67,7 @@ public class JdbcPostRepository implements PostRepository {
             }
 
         } else {
-            String sql = "SELECT * FROM post LEFT JOIN member ON post.post_uploader = member.member_idnum WHERE post.post_title LIKE? AND post.post_id IN (SELECT tag_post_id FROM tag WHERE ";
+            String sql = "SELECT * FROM post LEFT JOIN member ON post.post_uploader = member.member_idnum WHERE post.post_title LIKE ? AND post.post_id IN (SELECT tag_post_id FROM tag WHERE ";
             for (int i = 1; i < tags.length; i++) {
                 sql += "tag_detail= ? OR ";
             }
@@ -78,7 +78,7 @@ public class JdbcPostRepository implements PostRepository {
             try {
                 conn = getConnection();
                 pstmt = conn.prepareStatement(sql);
-                pstmt.setString(1, "?" + title + "?");
+                pstmt.setString(1, "%" + title + "%");
                 int index = 2;
                 for (String tag : tags) {
                     pstmt.setString(index++, tag);
@@ -117,7 +117,7 @@ public class JdbcPostRepository implements PostRepository {
 
     @Override
     public List<Post> findBetween(long start, long end, String category) {
-        String sql = "SELECT * FROM post LEFT JOIN member ON post.post_uploader = member.member_idnum WHERE post_category = ? ORDER BY post_uploadtime";
+        String sql = "SELECT * FROM post LEFT JOIN member ON post.post_uploader = member.member_idnum WHERE post_category = ? ORDER BY post_uploadtime DESC";
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -153,7 +153,7 @@ public class JdbcPostRepository implements PostRepository {
 
     @Override
     public List<Post> findByView(long start, long end, String category) {
-        String sql = "SELECT * FROM post LEFT JOIN member ON post.post_uploader = member.member_idnum WHERE post_category = ? ORDER BY post_view";
+        String sql = "SELECT * FROM post LEFT JOIN member ON post.post_uploader = member.member_idnum WHERE post_category = ? ORDER BY post_view DESC";
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;

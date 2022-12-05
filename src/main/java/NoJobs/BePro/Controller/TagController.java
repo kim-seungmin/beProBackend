@@ -24,11 +24,8 @@ public class TagController {
     public List<Map<String,String>> searchEveryHashtag(){
         List<Tag> tagList = tagService.getAll();
         List<Map<String,String>> result = new ArrayList<>();
-        Map<String, String> tempMap = new HashMap<>();
-
         for(int i=0;i<tagList.size();i++){
-            tempMap.put("name",tagList.get(i).getDetail());
-            result.add(tempMap);
+            result.add(Map.of("name",tagList.get(i).getDetail()));
         }
         return result;
 
