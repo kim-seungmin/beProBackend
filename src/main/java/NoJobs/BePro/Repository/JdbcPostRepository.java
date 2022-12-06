@@ -45,7 +45,7 @@ public class JdbcPostRepository implements PostRepository {
             try {
                 conn = getConnection();
                 pstmt = conn.prepareStatement(sql);
-                pstmt.setString(1, "?" + title + "?");
+                pstmt.setString(1, "%" + title + "%");
                 rs = pstmt.executeQuery();
                 List<Post> posts = new ArrayList<>();
                 while (rs.next()) {
