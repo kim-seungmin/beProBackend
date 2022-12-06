@@ -57,6 +57,7 @@ public class JdbcPostRepository implements PostRepository {
                     post.setDetail(rs.getString("post_detail"));
                     post.setView(rs.getInt("post_view"));
                     post.setLike(rs.getInt("post_like"));
+                    post.setTags(getTagById(rs.getString("post_id")));
                     posts.add(post);
                 }
                 return posts;
@@ -94,6 +95,7 @@ public class JdbcPostRepository implements PostRepository {
                     post.setDetail(rs.getString("post_detail"));
                     post.setView(rs.getInt("post_view"));
                     post.setLike(rs.getInt("post_like"));
+                    post.setTags(getTagById(rs.getString("post_id")));
                     posts.add(post);
                 }
                 return posts;
@@ -102,6 +104,29 @@ public class JdbcPostRepository implements PostRepository {
             } finally {
                 close(conn, pstmt, rs);
             }
+        }
+    }
+
+    private String[] getTagById(String post_id) {
+        String sql = "SELECT * FROM tag WHERE tag_post_id = ?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        ArrayList<String> result = new ArrayList<>();
+        try {
+            conn = getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, post_id);
+            rs = pstmt.executeQuery();
+            List<Post> posts = new ArrayList<>();
+            while(rs.next()) {
+                result.add(rs.getString("tag_detail"));
+            }
+            return result.toArray(new String[result.size()]);
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        } finally {
+            close(conn, pstmt, rs);
         }
     }
 
@@ -140,6 +165,7 @@ public class JdbcPostRepository implements PostRepository {
                     post.setDetail(rs.getString("post_detail"));
                     post.setView(rs.getInt("post_view"));
                     post.setLike(rs.getInt("post_like"));
+                    post.setTags(getTagById(rs.getString("post_id")));
                     posts.add(post);
                 }else{ return posts;}
             }
@@ -176,6 +202,7 @@ public class JdbcPostRepository implements PostRepository {
                     post.setDetail(rs.getString("post_detail"));
                     post.setView(rs.getInt("post_view"));
                     post.setLike(rs.getInt("post_like"));
+                    post.setTags(getTagById(rs.getString("post_id")));
                     posts.add(post);
                 }else{ return posts;}
             }

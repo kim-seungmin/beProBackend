@@ -6,6 +6,7 @@ public class Post {
     private String uploaderId;
     private String uploadtime;
     private String detail;
+    private String[] tags;
     private long view;
     private long like;
 
@@ -65,4 +66,13 @@ public class Post {
     public void setLike(long like) {
         this.like = like;
     }
+
+    public String[] getTags() {
+        return tags;
+    }
+
+    public void setTags(String[] tags) {
+        this.tags = tags;
+    }
+
 }
