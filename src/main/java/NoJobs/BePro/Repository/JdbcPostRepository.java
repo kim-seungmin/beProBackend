@@ -57,6 +57,7 @@ public class JdbcPostRepository implements PostRepository {
                     post.setDetail(rs.getString("post_detail"));
                     post.setView(rs.getInt("post_view"));
                     post.setLike(rs.getInt("post_like"));
+                    post.setCategory(rs.getString("post_category"));
                     post.setTags(getTagById(rs.getString("post_id")));
                     posts.add(post);
                 }
@@ -95,6 +96,7 @@ public class JdbcPostRepository implements PostRepository {
                     post.setDetail(rs.getString("post_detail"));
                     post.setView(rs.getInt("post_view"));
                     post.setLike(rs.getInt("post_like"));
+                    post.setCategory(rs.getString("post_category"));
                     post.setTags(getTagById(rs.getString("post_id")));
                     posts.add(post);
                 }
@@ -165,6 +167,7 @@ public class JdbcPostRepository implements PostRepository {
                     post.setDetail(rs.getString("post_detail"));
                     post.setView(rs.getInt("post_view"));
                     post.setLike(rs.getInt("post_like"));
+                    post.setCategory(rs.getString("post_category"));
                     post.setTags(getTagById(rs.getString("post_id")));
                     posts.add(post);
                 }else{ return posts;}
@@ -202,6 +205,7 @@ public class JdbcPostRepository implements PostRepository {
                     post.setDetail(rs.getString("post_detail"));
                     post.setView(rs.getInt("post_view"));
                     post.setLike(rs.getInt("post_like"));
+                    post.setCategory(rs.getString("post_category"));
                     post.setTags(getTagById(rs.getString("post_id")));
                     posts.add(post);
                 }else{ return posts;}
