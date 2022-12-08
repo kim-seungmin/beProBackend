@@ -1,13 +1,12 @@
 package NoJobs.BePro.Repository;
 
+import NoJobs.BePro.Domain.Member;
 import NoJobs.BePro.Domain.Post;
+import NoJobs.BePro.Form.PostForm;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -211,6 +210,91 @@ public class JdbcPostRepository implements PostRepository {
                 }else{ return posts;}
             }
             return posts;
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        } finally {
+            close(conn, pstmt, rs);
+        }
+    }
+
+    @Override
+    public void insertPost(PostForm form, String category) {
+        MemberRepository memberRepository = new JdbcMemberRepository(dataSource);
+        Member uploader = memberRepository.findById(form.getId()).get();
+
+        String sql = "INSERT INTO post(post_title, post_uploader, post_detail, post_category) VALUES(?,?,?,?) RETURNING post_id";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        String postID;
+        try {
+            conn = getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, form.getTitle());
+            pstmt.setLong(2, uploader.getIdNum());
+            pstmt.setString(3, form.getContext());
+            pstmt.setString(4, category);
+            pstmt.execute();
+            rs = pstmt.getResultSet();
+            if (rs.next()) {
+                postID = (rs.getString(1));
+                System.out.println(postID);
+            } else {
+                throw new SQLException("등록 실패");
+            }
+            sql = "INSERT INTO tag(tag_post_id, tag_detail) VALUES(?,?)";
+            for(String tag:form.getTag()){
+                pstmt = conn.prepareStatement(sql,
+                        Statement.RETURN_GENERATED_KEYS);
+                pstmt.setString(1, postID);
+                pstmt.setString(2, tag);
+                pstmt.executeUpdate();
+                rs = pstmt.getGeneratedKeys();
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        } finally {
+            close(conn, pstmt, rs);
+        }
+    }
+
+    @Override
+    public void updatePost(PostForm form, String category) {
+        MemberRepository memberRepository = new JdbcMemberRepository(dataSource);
+        Member uploader = memberRepository.findById(form.getId()).get();
+
+        String sql = "UPDATE post SET post_title = ?, post_uploader = ?, post_detail = ?, post_category = ? WHERE post_id = ?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection();
+            pstmt = conn.prepareStatement(sql,
+                    Statement.RETURN_GENERATED_KEYS);
+            pstmt.setString(1, form.getTitle());
+            pstmt.setLong(2, uploader.getIdNum());
+            pstmt.setString(3, form.getContext());
+            pstmt.setString(4, category);
+            pstmt.setString(5, form.getIndex());
+            pstmt.execute();
+            rs = pstmt.getGeneratedKeys();
+
+            sql="DELETE FROM tag WHERE tag_post_id = ? ";
+            pstmt = conn.prepareStatement(sql,
+                    Statement.RETURN_GENERATED_KEYS);
+            pstmt.setString(1, form.getIndex());
+            pstmt.execute();
+            rs = pstmt.getGeneratedKeys();
+            System.out.println(form.getIndex());
+            sql = "INSERT INTO tag(tag_post_id, tag_detail) VALUES(?,?)";
+            for(String tag:form.getTag()){
+                pstmt = conn.prepareStatement(sql,
+                        Statement.RETURN_GENERATED_KEYS);
+                pstmt.setString(1, form.getIndex());
+                pstmt.setString(2, tag);
+                pstmt.executeUpdate();
+                rs = pstmt.getGeneratedKeys();
+            }
         } catch (Exception e) {
             throw new IllegalStateException(e);
         } finally {
