@@ -7,7 +7,17 @@ public class Member {
     private String email;
     private String major;
     private String token;
+    private int admin;
     private long idNum;
+
+
+    public int getAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(int admin) {
+        this.admin = admin;
+    }
 
     public String getPassword() {
         return password;

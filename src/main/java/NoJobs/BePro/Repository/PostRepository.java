@@ -3,6 +3,7 @@ import NoJobs.BePro.Domain.Post;
 import NoJobs.BePro.Form.PostForm;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface PostRepository {
@@ -16,4 +17,6 @@ public interface PostRepository {
     List<Post> findByView(long start, long end, String category);
     void insertPost(PostForm form, String category);
     void updatePost(PostForm form, String category);
+
+    List<Map> findAllIn(String board);
 }

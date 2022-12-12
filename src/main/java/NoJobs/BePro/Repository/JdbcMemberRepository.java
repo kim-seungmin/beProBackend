@@ -62,6 +62,7 @@ public class JdbcMemberRepository implements MemberRepository {
                 member.setIdNum(rs.getLong("member_idnum"));
                 member.setMajor(rs.getString("member_major"));
                 member.setToken(rs.getString("member_token"));
+                member.setAdmin(rs.getInt("member_admin"));
                 return Optional.of(member);
             } else {
                 return Optional.empty();
@@ -98,6 +99,31 @@ public class JdbcMemberRepository implements MemberRepository {
         } finally {
             close(conn, pstmt, rs);
         }
+    }
+
+    @Override
+    public boolean isUploader(long id, int index) {
+        String sql = "select * from post where post_id = ?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, index);
+            rs = pstmt.executeQuery();
+            if(rs.next()) {
+                Member member = new Member();
+                if(id==rs.getLong("post_uploader")){
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        } finally {
+            close(conn, pstmt, rs);
+        }
+        return false;
     }
 
     @Override

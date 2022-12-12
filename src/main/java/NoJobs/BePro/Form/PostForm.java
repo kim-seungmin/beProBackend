@@ -3,8 +3,8 @@ package NoJobs.BePro.Form;
 public class PostForm {
     String title;
     String[] tag;
-    String context;
-    String id;
+    String detail;
+    String uploaderId;
     String index;
 
     public String getTitle() {
@@ -24,19 +24,19 @@ public class PostForm {
     }
 
     public String getContext() {
-        return context;
+        return detail;
     }
 
     public void setContext(String context) {
-        this.context = context;
+        this.detail = context;
     }
 
     public String getId() {
-        return id;
+        return uploaderId;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.uploaderId = id;
     }
 
     public String getIndex() {

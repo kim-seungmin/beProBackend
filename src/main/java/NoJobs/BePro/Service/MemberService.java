@@ -90,4 +90,9 @@ public class MemberService {
     }
 
 
+    public boolean isEditer(String id, int index) {
+        Optional<Member> member = findOne(id);
+        if(!member.isPresent())return false;
+        return memberRepository.isUploader(member.get().getIdNum(), index);
+    }
 }

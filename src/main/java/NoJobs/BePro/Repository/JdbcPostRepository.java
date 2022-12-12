@@ -7,9 +7,7 @@ import org.springframework.jdbc.datasource.DataSourceUtils;
 
 import javax.sql.DataSource;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class JdbcPostRepository implements PostRepository {
     private final DataSource dataSource;
@@ -51,7 +49,7 @@ public class JdbcPostRepository implements PostRepository {
                     Post post = new Post();
                     post.setId(rs.getInt("post_id"));
                     post.setTitle(rs.getString("post_title"));
-                    post.setUploaderId(rs.getString("member_id"));
+                    post.setUploaderNike(rs.getString("member_nickname"));
                     post.setUploadtime(rs.getString("post_uploadtime"));
                     post.setDetail(rs.getString("post_detail"));
                     post.setView(rs.getInt("post_view"));
@@ -90,7 +88,7 @@ public class JdbcPostRepository implements PostRepository {
                     Post post = new Post();
                     post.setId(rs.getInt("post_id"));
                     post.setTitle(rs.getString("post_title"));
-                    post.setUploaderId(rs.getString("member_nickname"));
+                    post.setUploaderNike(rs.getString("member_nickname"));
                     post.setUploadtime(rs.getString("post_uploadtime"));
                     post.setDetail(rs.getString("post_detail"));
                     post.setView(rs.getInt("post_view"));
@@ -199,13 +197,10 @@ public class JdbcPostRepository implements PostRepository {
                     Post post = new Post();
                     post.setId(rs.getInt("post_id"));
                     post.setTitle(rs.getString("post_title"));
-                    post.setUploaderId(rs.getString("member_id"));
+                    post.setUploaderNike(rs.getString("member_nickname"));
                     post.setUploadtime(rs.getString("post_uploadtime"));
-                    post.setDetail(rs.getString("post_detail"));
                     post.setView(rs.getInt("post_view"));
                     post.setLike(rs.getInt("post_like"));
-                    post.setCategory(rs.getString("post_category"));
-                    post.setTags(getTagById(rs.getString("post_id")));
                     posts.add(post);
                 }else{ return posts;}
             }
@@ -295,6 +290,38 @@ public class JdbcPostRepository implements PostRepository {
                 pstmt.executeUpdate();
                 rs = pstmt.getGeneratedKeys();
             }
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        } finally {
+            close(conn, pstmt, rs);
+        }
+    }
+
+    @Override
+    public List<Map> findAllIn(String board) {
+        List<Map> resultList = new ArrayList<>();
+
+        String sql = "SELECT * FROM post LEFT JOIN member ON post.post_uploader = member.member_idnum WHERE post_category = ? ORDER BY post_uploadtime DESC";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, board);
+            rs = pstmt.executeQuery();
+            List<Post> posts = new ArrayList<>();
+            while(rs.next()) {
+                Map result = new HashMap<String, Object>();
+                result.put("title",rs.getString("post_title"));
+                result.put("id",rs.getInt("post_id"));
+                result.put("uploaderNick",rs.getString("member_nickname"));
+                result.put("view",rs.getInt("post_view"));
+                result.put("uploadtime",rs.getString("post_uploadtime"));
+                result.put("like",rs.getInt("post_like"));;
+                resultList.add(result);
+            }
+            return resultList;
         } catch (Exception e) {
             throw new IllegalStateException(e);
         } finally {

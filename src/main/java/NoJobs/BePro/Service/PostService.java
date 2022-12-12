@@ -37,4 +37,8 @@ public class PostService {
         postRepository.updatePost(form, category);
         return(Map.of("msg","글이 수정되었습니다"));
     }
+
+    public List<Map> searchList(String board) {
+        return postRepository.findAllIn(board);
+    }
 }

@@ -1,14 +1,12 @@
 package NoJobs.BePro.Controller;
 
 import NoJobs.BePro.Domain.Post;
+import NoJobs.BePro.Form.ListForm;
 import NoJobs.BePro.Form.PostForm;
 import NoJobs.BePro.Form.SearchForm;
 import NoJobs.BePro.Service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,15 +25,18 @@ public class PostController {
     public List<Post> searchEveryHashtag(@RequestBody SearchForm form){
         return postService.searchByTitleAndTag(form.getInputValue(), form.getHashTags());
     }
-
-    @GetMapping("/get/mainqna")
-    public List<Post> GetMainQna(){
-        return postService.searchMainQnA();
+    @PostMapping("/board/main")
+    public List<Post> GetMain(@RequestBody ListForm form){
+        if(form.getBoard().equals("qna")){
+            return postService.searchMainQnA();
+        }else{
+            return postService.searchMainNotice();
+        }
     }
 
-    @GetMapping("/get/maingongji")
-    public List<Post> GetMainNotice(){
-        return postService.searchMainNotice();
+    @PostMapping("/board/list")
+    public List<Map> GetPostList(@RequestBody ListForm form){
+        return  postService.searchList(form.getBoard());
     }
 
     @GetMapping("/get/mainviewdec")

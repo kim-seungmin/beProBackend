@@ -4,6 +4,7 @@ public class Post {
     private long id;
     private String title;
     private String uploaderId;
+    private String uploaderNike;
     private String uploadtime;
     private String detail;
     private String category;
@@ -11,6 +12,13 @@ public class Post {
     private long view;
     private long like;
 
+    public String getUploaderNike() {
+        return uploaderNike;
+    }
+
+    public void setUploaderNike(String uploaderNike) {
+        this.uploaderNike = uploaderNike;
+    }
 
     public long getId() {
         return id;
