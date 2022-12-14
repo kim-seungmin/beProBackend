@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface PostRepository {
     Post save(Post post);
-    Optional<Post> findById(Long id);
+    Map findByPostId(Long id);
     Optional<Post> findBytitle(String title);
     List<Post> findBytitleAndTag(String title,String[] tags);
     List<Post> findAll();
@@ -19,4 +19,6 @@ public interface PostRepository {
     void updatePost(PostForm form, String category);
 
     List<Map> findAllIn(String board);
+
+    List<Map> findByMember(String id);
 }

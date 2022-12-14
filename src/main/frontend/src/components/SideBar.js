@@ -1,19 +1,22 @@
+import { useEffect, useState } from "react";
+import bindSideBarContent from "../axios/binds/bindSideBarContent";
 
-function SideBar(){
+function SideBar(props){
+    const [content, setContent] = useState([]);
+    useEffect(()=>{
+      const method = bindSideBarContent(props.name);
+      const result = method();
+      result.then(data=>{
+        setContent(data);
+      })
+    },[props.name])
     return(
         <div className="sideBarFrame">
-              <div className="sideBarTitle"># 실시간 태그순위</div>
+              <div className="sideBarTitle">{props.name}</div>
               <div className="sideBarContentFrame">
-                <div>1. # 컴퓨터공학과</div>
-                <div>2. # 컴퓨터공학과</div>
-                <div>3. # 컴퓨터공학과</div>
-                <div>4. # 컴퓨터공학과</div>
-                <div>5. # 컴퓨터공학과</div>
-                <div>6. # 컴퓨터공학과</div>
-                <div>7. # 컴퓨터공학과</div>
-                <div>8. # 컴퓨터공학과</div>
-                <div>9. # 컴퓨터공학과</div>
-                <div>10. # 컴퓨터공학과</div>
+                {content.map((data, index)=>{
+                  return <div key={data}>{index+1}. {data}</div>
+                })}
               </div>
         </div>
     )

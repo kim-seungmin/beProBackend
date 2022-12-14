@@ -1,0 +1,6 @@
+.tagBox{
+    display: flex;
+    flex-direction: row;
+    border: 1px solid green;
+    border-radius: 10%;
+}

@@ -1,11 +1,6 @@
 package NoJobs.BePro.Service;
 
-import NoJobs.BePro.Repository.JdbcMemberRepository;
-import NoJobs.BePro.Repository.JdbcPostRepository;
-import NoJobs.BePro.Repository.JdbcTagRepository;
-import NoJobs.BePro.Repository.MemberRepository;
-import NoJobs.BePro.Repository.PostRepository;
-import NoJobs.BePro.Repository.TagRepository;
+import NoJobs.BePro.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,5 +40,13 @@ public class SpringConfig {
 
     @Bean
     public TagRepository tagRepository() { return new JdbcTagRepository(dataSource);}
+
+    @Bean
+    public CommentService commentService(){
+        return new CommentService(commentRepository());
+    }
+
+    @Bean
+    public CommentRepository commentRepository() { return new JdbcCommentRepository(dataSource);}
 
 }

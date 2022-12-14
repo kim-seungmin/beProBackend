@@ -14,11 +14,8 @@ function Header(){
 
     const signOutHandler = ()=>{
         const isLogOut = axiosSignOut();
-        if(isLogOut){
-            navigate(0);
-        }
     }
-    
+
 
     useEffect(() => {
         if(localStorage.getItem("token")){
@@ -29,7 +26,7 @@ function Header(){
     }, [token])
 
     const UI = {
-        loginSuccess1 : <Link to="/MyPage/*"><li>마이페이지</li></Link> ,
+        loginSuccess1 : <Link to="/mypage/*"><li>{nick}</li></Link> ,
         loginSuccess2 : <li onClick={()=>{signOutHandler()}}>Sign Out</li>,
         SignUp : <li onClick={()=>{setSignUp(true)}}>Sign up</li>,
         SignIn : <li onClick={()=>{setSignIn(true)}}>Sign in</li>
@@ -42,6 +39,10 @@ function Header(){
                 <Link to="/"><div className="headerTitle">be전공자</div></Link>
                     <div className="headerTools">
                         <ul className="headerToolTitle">
+                            <div style={{cursor:"pointer"}} onClick={()=>{ navigate('/write',{state:{ type:"new", board:"qna" }}) }}>글쓰기</div>
+                            <span>|</span>
+                            <Link to="/qna"><div>글목록</div></Link>
+                            <span>|</span>
                             {token ? UI['loginSuccess1'] : UI['SignIn']}
                             {signIn ? <SignIn forClose={setSignIn} forNick={setNick}/> : null}
                             <span>|</span>

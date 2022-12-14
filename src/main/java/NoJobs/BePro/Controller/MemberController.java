@@ -3,8 +3,8 @@ package NoJobs.BePro.Controller;
 import NoJobs.BePro.Domain.Member;
 import NoJobs.BePro.Form.AuthForm;
 import NoJobs.BePro.Form.MemberForm;
-import NoJobs.BePro.Repository.JdbcPostRepository;
 import NoJobs.BePro.Service.MemberService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -79,6 +79,7 @@ public class MemberController {
         member.setName(form.getNick());
         member.setEmail(form.getEmail());
         member.setMajor(form.getMajor());
+        member.setPro(form.getIsPro());
 
         Map result = new HashMap<String,Object>();
         if(memberService.join(member).equals("success")){
@@ -142,5 +143,21 @@ public class MemberController {
             result.put("msg","권한이 없습니다");
             return  result;
         }
+        result.put("auth",false);
+        result.put("msg","권한이 없습니다");
+        return result;
     }
+
+    @PostMapping("/mypage/userupdate")
+    public Map updateMember(@RequestBody MemberForm form){
+        Map result = new HashMap<String, Object>();
+        if(memberService.updateMemberInfo(form)){
+            result.put("msg","업데이트에 성공했습니다.");
+            return result;
+        }
+        result.put("msg","업데이트에 실패했습니다.");
+        return result;
+    }
+
+
 }

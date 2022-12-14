@@ -5,11 +5,14 @@ function SearchDropDown(props){
     const [supportData, setSupportData]= useState([]);
     useEffect(() => {
       if(props.major.length > 1){
-        //const value = hashtag;
-        const value = axiosGetHashTag(setSupportData);
-        setSupportData(value.filter((data)=>{
-            return (data.name).includes(props.major);
-        }))
+        const value = axiosGetHashTag();
+        value.then(data =>{
+          setSupportData( data.filter((
+            (bit)=>{
+              return (bit.name).includes(props.major);
+            }
+          )))
+        })
       }else{
         setSupportData([]);
       }
@@ -23,12 +26,10 @@ function SearchDropDown(props){
       props.forDelText("");
     }
     return(
-        <div className="dropDownBox">
+        <div key={"dropdown"} className="dropDownBox">
             {supportData.map((data, index)=>{
                 return(
-                  <>
-                    <div value={data.name} onClick={onClickHandler} style={{borderBottom:"1px solid black", cursor:"pointer"}} key={index}>{data.name}</div>
-                  </>
+                    <div key={data.name} onClick={onClickHandler} style={{borderBottom:"1px solid black", cursor:"pointer"}} >{data.name}</div>
                 )
             })}
         </div>

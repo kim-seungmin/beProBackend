@@ -7,9 +7,17 @@ public class Member {
     private String email;
     private String major;
     private String token;
+    private Boolean isPro;
     private int admin;
     private long idNum;
 
+    public Boolean getPro() {
+        return isPro;
+    }
+
+    public void setPro(Boolean pro) {
+        isPro = pro;
+    }
 
     public int getAdmin() {
         return admin;

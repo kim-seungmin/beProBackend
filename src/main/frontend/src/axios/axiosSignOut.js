@@ -7,23 +7,38 @@ function axiosSignOut(){
         get 요청을 통해 서버상에 로그인 token 삭제
     }
     */
-    
-    const clientData =  localStorage.getItem("token")
+    // 임시 로그아웃
+    /*
+    const clientData =  localStorage.getItem("token");
     if(clientData){
-        const request = axios.get('/user/signout')
+        localStorage.removeItem("token");
+        return true;
+    }else{
+        alert("이미 로그아웃 상태 입니다.");
+    }*/
+    // 백엔드 통신 로그아웃
+    const clientData = JSON.parse(localStorage.getItem("token"));
+    if(clientData){
+        const logoutData = {
+            id : clientData.id
+        }
+
+        const request = axios.post('/user/signout', logoutData)
         .then( response=> response.data)
         request.then(data => {
             if(data.signOutSuccess){
                 alert(data.msg);
                 localStorage.removeItem("token");
-                return true;
+                window.location.reload();
             }else{
-                alert(data.msg);
+                alert(data.msg); 
             }
-        }).catch(err => console.log(err));
+        }).catch(err => alert(err.message));
+        
     }else{
         alert("이미 로그아웃 상태 입니다.");
+        window.location.reload();
     }
-    return false;
+    
 }
 export default axiosSignOut;

@@ -1,22 +1,24 @@
 import { useNavigate} from "react-router-dom";
+import axiosSearch from "../axios/axiosSearch";
 
 const SearchBox = (props) =>{
     
     const navigate = useNavigate();
     const onClickHandler = () =>{
-        navigate('/Result',{
+        /*navigate('/Board',{
           state:{
             content : "tt"
           }
-        })
-        /*const contents = axiosSearch(value, hashTag);
+        })*/
+        const contents = axiosSearch(props.forValue, props.hashTag);
+        console.log(contents);
         contents.then(data =>{
-          navigate('/Result',{
+          navigate('/qna/search',{
             state:{
               content : data
             }
           })  
-        })*/
+        })
       }
 
     return(

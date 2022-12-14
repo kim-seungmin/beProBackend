@@ -6,9 +6,9 @@ function HashTag(props){
         props.setHashTag(copy);
     }
     return(
-        <div style={{display:"flex", flexDirection:"row"}}>
+        <div className="tagBox">
             <div>{props.tagName}</div>
-            <div style={{cursor:"pointer"}} onClick={onClickHandler}>X</div>
+            {props.forView ? null : <div style={{cursor:"pointer"}} onClick={onClickHandler}>X</div>}
         </div>
         
     )

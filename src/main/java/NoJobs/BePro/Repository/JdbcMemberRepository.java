@@ -1,6 +1,7 @@
 package NoJobs.BePro.Repository;
 
 import NoJobs.BePro.Domain.Member;
+import NoJobs.BePro.Form.MemberForm;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import javax.sql.DataSource;
 import java.sql.*;
@@ -15,7 +16,7 @@ public class JdbcMemberRepository implements MemberRepository {
     }
     @Override
     public Member save(Member member) {
-        String sql = "insert into member(member_id, member_password, member_email, member_nickname, member_major) values(?,?,?,?,?)";
+        String sql = "insert into member(member_id, member_password, member_email, member_nickname, member_major, member_isPro) values(?,?,?,?,?)";
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -28,6 +29,11 @@ public class JdbcMemberRepository implements MemberRepository {
             pstmt.setString(3, member.getEmail());
             pstmt.setString(4, member.getName());
             pstmt.setString(5, member.getMajor());
+            if(member.getPro()){
+                pstmt.setInt(6, 1);
+            }else{
+                pstmt.setInt(6, 0);
+            }
 
             pstmt.executeUpdate();
             rs = pstmt.getGeneratedKeys();
@@ -127,6 +133,36 @@ public class JdbcMemberRepository implements MemberRepository {
     }
 
     @Override
+    public boolean updateMember(MemberForm form) {
+        String sql = "UPDATE post SET member_password = ?, member_email = ?, member_nickname = ?, member_major = ?, member_isPro = ? WHERE member_id = ?";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            conn = getConnection();
+            pstmt = conn.prepareStatement(sql,
+                    Statement.RETURN_GENERATED_KEYS);
+            pstmt.setString(1, form.getPw());
+            pstmt.setString(2, form.getEmail());
+            pstmt.setString(3, form.getNick());
+            pstmt.setString(4, form.getMajor());
+            if(form.getIsPro()) {
+                pstmt.setInt(5, 1);
+            }else{
+                pstmt.setInt(5, 0);
+            }
+            pstmt.setString(6, form.getId());
+            pstmt.execute();
+            rs = pstmt.getGeneratedKeys();
+            return true;
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        } finally {
+            close(conn, pstmt, rs);
+        }
+    }
+
+    @Override
     public boolean updateToken(Member member, Optional<String> token) {
         if(token.isPresent()) {
             String sql = "update member set member_token = ? where member_id = ?";
@@ -201,7 +237,7 @@ public class JdbcMemberRepository implements MemberRepository {
             rs = pstmt.executeQuery();
             if(rs.next()) {
                 Member member = new Member();
-                member.setId(rs.getString("id"));
+                member.setId(rs.getString("member_id"));
                 member.setName(rs.getString("member_nickname"));
                 return Optional.of(member);
             }

@@ -41,4 +41,12 @@ public class PostService {
     public List<Map> searchList(String board) {
         return postRepository.findAllIn(board);
     }
+
+    public List<Map> getOnesPost(String id) {
+        return postRepository.findByMember(id);
+    }
+
+    public Map getPostById(String id) {
+        return postRepository.findByPostId(Long.parseLong(id));
+    }
 }

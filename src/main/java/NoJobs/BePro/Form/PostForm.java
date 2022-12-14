@@ -5,7 +5,7 @@ public class PostForm {
     String[] tag;
     String detail;
     String uploaderId;
-    String index;
+    String id;
 
     public String getTitle() {
         return title;
@@ -23,27 +23,27 @@ public class PostForm {
         this.tag = tag;
     }
 
-    public String getContext() {
+    public String getDetail() {
         return detail;
     }
 
-    public void setContext(String context) {
+    public void setDetail(String context) {
         this.detail = context;
     }
 
-    public String getId() {
+    public String getUploaderId() {
         return uploaderId;
     }
 
+    public void setUploaderId(String uploaderId) {
+        this.uploaderId = uploaderId;
+    }
+
+    public String getId() {
+        return id;
+    }
+
     public void setId(String id) {
-        this.uploaderId = id;
-    }
-
-    public String getIndex() {
-        return index;
-    }
-
-    public void setIndex(String index) {
-        this.index = index;
+        this.id = id;
     }
 }

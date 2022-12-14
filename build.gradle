@@ -27,14 +27,14 @@ tasks.named('test') {
 }
 
 //frontend git clone
-
-def tempDir = "$projectDir/src/main/tempgit"
-
-task cloneGitRepo(type: Exec) {
-	workingDir "$projectDir/src/main/tempgit"
-	commandLine 'git clone https://github.com/kimhaechang1/bePro', ""
-
-}
+//
+//def tempDir = "$projectDir/src/main/tempgit"
+//
+//task cloneGitRepo(type: Exec) {
+//	workingDir "$projectDir/src/main/tempgit"
+//	commandLine 'git clone https://github.com/kimhaechang1/bePro', ""
+//
+//}
 
 //start React front
 

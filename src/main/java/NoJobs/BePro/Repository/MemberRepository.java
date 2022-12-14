@@ -1,5 +1,6 @@
 package NoJobs.BePro.Repository;
 import NoJobs.BePro.Domain.Member;
+import NoJobs.BePro.Form.MemberForm;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,4 +12,6 @@ public interface MemberRepository {
     List<Member> findAll();
 
     boolean isUploader(long id, int index);
+
+    boolean updateMember(MemberForm form);
 }

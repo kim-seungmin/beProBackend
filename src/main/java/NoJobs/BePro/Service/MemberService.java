@@ -1,6 +1,7 @@
 package NoJobs.BePro.Service;
 
 import NoJobs.BePro.Domain.Member;
+import NoJobs.BePro.Form.MemberForm;
 import NoJobs.BePro.Repository.MemberRepository;
 
 import NoJobs.BePro.Tool.SecureTool;
@@ -94,5 +95,9 @@ public class MemberService {
         Optional<Member> member = findOne(id);
         if(!member.isPresent())return false;
         return memberRepository.isUploader(member.get().getIdNum(), index);
+    }
+
+    public boolean updateMemberInfo(MemberForm form) {
+        return memberRepository.updateMember(form);
     }
 }

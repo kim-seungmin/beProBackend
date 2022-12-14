@@ -25,11 +25,25 @@ div.card{
     border: 1px solid darkolivegreen;
 }
 div.cardTitle{
+    cursor: pointer;
     font-size: 15pt;
     padding: 5px 10px;
     border-bottom : 1px solid darkolivegreen;
 }
 div.cardDetail{
+    display: flex;
     padding-top: 10px;
+    align-items: center;
     padding-bottom: 10px;
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+div.cardContentTitle{
+    margin-right: 0;
+    width: fit-content;
+    cursor:pointer;
+}
+
+div.cardBoardTitle{
+    cursor:pointer;
 }

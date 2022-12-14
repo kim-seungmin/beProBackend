@@ -7,6 +7,7 @@ import '../components/css/SideBar.css';
 import '../components/css/SearchDropDown.css';
 import '../components/css/HashTag.css';
 import '../components/css/SearchBox.css';
+import '../components/css/Write.css';
 import Header from '../components/Header';
 import Card from '../components/Card';
 import SideBar from '../components/SideBar';
@@ -15,7 +16,6 @@ import HashTag from '../components/HashTag';
 import SearchBox from '../components/SearchBox';
 import axiosSearch from '../axios/axiosSearch';
 import {useState} from 'react';
-import { useNavigate } from 'react-router-dom';
 
 function MainPage(){
     const [value, setValue] = useState("");
@@ -27,10 +27,10 @@ function MainPage(){
       <div className="mainContentFrame">
         <div className="innerArea border">
           <div className="contentFrame">
-            <SideBar/>
+            <SideBar name={"# 실시간 태그순위"}/>
             <div className="cardFrame">
             <div>
-                <SearchBox forValue={value} forsetValue={setValue}/>
+                <SearchBox forValue={value} hashTag={hashTag} forsetValue={setValue}/>
                 <SearchDropDown major={value} forDelText={setValue} setHashTag={setHashTag} forAppendHashTag={hashTag} />
                 <div className="tagArea" id="tags">
                   { hashTag.length > 0 ? hashTag.map(name =>(<HashTag forDelTag={hashTag} setHashTag={setHashTag} tagName={name} key={name}>{name}</HashTag>) ) : null }
