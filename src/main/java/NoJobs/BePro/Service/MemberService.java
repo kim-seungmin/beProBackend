@@ -62,7 +62,7 @@ public class MemberService {
         //ID검증
         Optional<Member> DBMember = findOne(member.getId());
         if(DBMember.isEmpty()){
-            resultMember.get().setToken("fail");
+            resultMember.get().setName("fail");
             return resultMember;
         }
         resultMember.get().setName(DBMember.get().getName());

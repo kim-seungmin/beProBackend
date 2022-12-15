@@ -71,7 +71,7 @@ public class PostController {
 
     @PostMapping("/board/view")
     public Map findById(@RequestBody PostForm form){
-        return postService.getPostById(form.getUploaderId());
+        return postService.getPostById(form.getId());
     }
 
 }

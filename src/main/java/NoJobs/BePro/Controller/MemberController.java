@@ -26,7 +26,7 @@ public class MemberController {
 
         Map result = new HashMap<String,Object>();
         Optional<Member> resultMember = memberService.login(member);
-        if(resultMember.isEmpty() ||resultMember.get().getName().equals("fail")){
+        if(resultMember==null){
             result.put("loginSuccess", false);
             result.put("nick", null);
             result.put("msg", "로그인에 실패하였습니다.");
@@ -35,12 +35,24 @@ public class MemberController {
             result.put("email", null);
             result.put("isPro", null);
             result.put("major", null);
+            return result;
         }else{
+            if(resultMember.get().getName().equals("fail")){
+                result.put("loginSuccess", false);
+                result.put("nick", null);
+                result.put("msg", "로그인에 실패하였습니다.");
+                result.put("cookie", null);
+                result.put("id", null);
+                result.put("email", null);
+                result.put("isPro", null);
+                result.put("major", null);
+                return result;
+            }
             result.put("loginSuccess", true);
             result.put("nick", resultMember.get().getName());
             result.put("id", resultMember.get().getName());
             result.put("email", resultMember.get().getName());
-            if(resultMember.get().getMajor().isEmpty()){
+            if(resultMember.get().getMajor()==null){
                 result.put("isPro", false);
                 result.put("major", null);
             }else{
