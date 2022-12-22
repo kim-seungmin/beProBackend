@@ -5,7 +5,7 @@ public class AuthForm {
     private int index;
     private String token;
     private Boolean isEdit;
-    private Boolean isLogin;
+    private Boolean isSignin;
     private Boolean isAdmin;
 
     public String getId() {
@@ -32,27 +32,23 @@ public class AuthForm {
         this.token = token;
     }
 
-    public Boolean getEdit() {
+    public Boolean getIsEdit() {
         return isEdit;
     }
 
-    public void setEdit(Boolean edit) {
+    public void setIsEdit(Boolean edit) {
         isEdit = edit;
     }
 
-    public Boolean getLogin() {
-        return isLogin;
+    public Boolean getIsSignin() {
+        return isSignin;
     }
 
-    public void setLogin(Boolean login) {
-        isLogin = login;
+    public void setIsSignin(Boolean signin) {
+        isSignin = signin;
     }
 
-    public Boolean getAdmin() {
-        return isAdmin;
-    }
+    public Boolean getIsAdmin() { return isAdmin; }
 
-    public void setAdmin(Boolean admin) {
-        isAdmin = admin;
-    }
+    public void setIsAdmin(Boolean admin) { isAdmin = admin; }
 }
