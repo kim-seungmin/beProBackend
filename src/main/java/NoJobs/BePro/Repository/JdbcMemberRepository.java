@@ -16,7 +16,7 @@ public class JdbcMemberRepository implements MemberRepository {
     }
     @Override
     public Member save(Member member) {
-        String sql = "insert into member(member_id, member_password, member_email, member_nickname, member_major, member_isPro) values(?,?,?,?,?)";
+        String sql = "insert into member(member_id, member_password, member_email, member_nickname, member_major, member_isPro) values(?,?,?,?,?,?)";
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;

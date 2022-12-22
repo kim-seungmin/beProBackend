@@ -46,7 +46,7 @@ public class PostService {
         return postRepository.findByMember(id);
     }
 
-    public Map getPostById(String id) {
-        return postRepository.findByPostId(Long.parseLong(id));
+    public Map getPostById(String id, String board) {
+        return postRepository.findByPostId(Long.parseLong(id),board);
     }
 }

@@ -44,34 +44,34 @@ public class PostController {
     }
 
 
-    @PostMapping("/qna/post")
+    @PostMapping("/post/qna")
     public Map postQna(@RequestBody PostForm form){
         return postService.post(form,"qna");
     }
 
-    @PostMapping("/notice/post")
+    @PostMapping("/post/notice")
     public Map postNotice(@RequestBody PostForm form){
         return postService.post(form,"notice");
     }
 
-    @PostMapping("/qna/update")
+    @PostMapping("/update/qna")
     public Map updateQna(@RequestBody PostForm form){
         return postService.update(form,"qna");
     }
 
-    @PostMapping("/notice/update")
+    @PostMapping("/update/notice")
     public Map updateNotice(@RequestBody PostForm form){
         return postService.update(form,"notice");
     }
 
-    @PostMapping("/mypage/getpostings")
+    @PostMapping("/user/getpostings")
     public List<Map> findMemberPost(@RequestBody MemberForm form){
         return postService.getOnesPost(form.getId());
     }
 
     @PostMapping("/board/view")
     public Map findById(@RequestBody PostForm form){
-        return postService.getPostById(form.getId());
+        return postService.getPostById(form.getId(),form.getBoard());
     }
 
 }

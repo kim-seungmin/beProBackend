@@ -7,6 +7,8 @@ public class PostForm {
     String uploaderId;
     String id;
 
+    String board;
+
     public String getTitle() {
         return title;
     }
@@ -38,6 +40,10 @@ public class PostForm {
     public void setUploaderId(String uploaderId) {
         this.uploaderId = uploaderId;
     }
+
+    public void setBoard(String board) { this.board = board; }
+
+    public String getBoard() { return board; }
 
     public String getId() {
         return id;

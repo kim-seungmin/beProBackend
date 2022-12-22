@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface PostRepository {
     Post save(Post post);
-    Map findByPostId(Long id);
+    Map findByPostId(Long id, String board);
     Optional<Post> findBytitle(String title);
     List<Post> findBytitleAndTag(String title,String[] tags);
     List<Post> findAll();

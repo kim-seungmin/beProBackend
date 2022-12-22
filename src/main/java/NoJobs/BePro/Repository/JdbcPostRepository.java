@@ -22,9 +22,9 @@ public class JdbcPostRepository implements PostRepository {
     }
 
     @Override
-    public Map findByPostId(Long id) {
+    public Map findByPostId(Long id,String board) {
         Map<String, Object> reslut = new HashMap<>();
-        String sql = "SELECT * FROM post LEFT JOIN member ON post.post_uploader = member.member_idnum WHERE post_id = ?";
+        String sql = "SELECT * FROM post LEFT JOIN member ON post.post_uploader = member.member_idnum WHERE post_id = ? AND post.post_category = ?";
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -32,11 +32,13 @@ public class JdbcPostRepository implements PostRepository {
             conn = getConnection();
             pstmt = conn.prepareStatement(sql);
             pstmt.setLong(1, id);
+            pstmt.setString(2, board);
             rs = pstmt.executeQuery();
             if(rs.next()) {
                 reslut.put("title", rs.getString("post_title"));
                 reslut.put("id", rs.getString("post_id"));
                 reslut.put("uploaderNick", rs.getString("member_nickname"));
+                reslut.put("uploaderId",rs.getString("member_id"));
                 reslut.put("view", rs.getString("post_view"));
                 reslut.put("uploadtime", rs.getString("post_uploadtime"));
                 reslut.put("like", rs.getString("post_like"));

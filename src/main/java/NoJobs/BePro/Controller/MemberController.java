@@ -122,45 +122,44 @@ public class MemberController {
 
     @PostMapping("/auth")
     public Map AuthSwitch(@RequestBody AuthForm form){
+        /*System.out.println("------------------");
+        System.out.println(form.getId());
+        System.out.println(form.getIndex());
+        System.out.println(form.getToken());
+        System.out.println(form.getIsAdmin());
+        System.out.println(form.getIsEdit());
+        System.out.println(form.getIsLogin());
+        System.out.println("------------------");*/
         Map<String,Object> result = new HashMap();
-        if(form.getEdit()){
+
+        if(form.getIsEdit()!=null){
             if(memberService.isEditer(form.getId(),form.getIndex())){
-                result.put("auth",true);
-                result.put("msg","인증되었습니다");
-                return result;
+                result.put("editAuth",true);
+            }else {
+                result.put("editAuth", false);
             }
-            result.put("auth",false);
-            result.put("msg","권한이 없습니다");
-            return result;
-        }else if(form.getLogin()){
-            result.put("auth",false);
-            result.put("msg","권한이 없습니다");
+        }
+        if(form.getIsSignin()!=null){
             Member member = memberService.findOne(form.getId()).get();
-            if(!member.getToken().isEmpty()){
-                if(member.getToken()==form.getToken()){
-                    result.put("auth",true);
-                    result.put("msg","인증되었습니다");
-                    return result;
-                }
+            if(!member.getToken().isEmpty() && member.getToken().equals(form.getToken())){
+                result.put("signinAuth",true);
+            }else{
+                result.put("signinAuth",false);
             }
-            return result;
-        }else if(form.getAdmin()){
+        }
+        if(form.getIsAdmin()!=null){
             Member member = memberService.findOne(form.getId()).get();
             if(member.getAdmin()==1){
-                result.put("auth",true);
-                result.put("msg","인증되었습니다");
-                return result;
+                result.put("adminAuth",true);
+
+            }else{
+                result.put("adminAuth",false);
             }
-            result.put("auth",false);
-            result.put("msg","권한이 없습니다");
-            return  result;
         }
-        result.put("auth",false);
-        result.put("msg","권한이 없습니다");
         return result;
     }
 
-    @PostMapping("/mypage/userupdate")
+    @PostMapping("/user/userupdate")
     public Map updateMember(@RequestBody MemberForm form){
         Map result = new HashMap<String, Object>();
         if(memberService.updateMemberInfo(form)){
