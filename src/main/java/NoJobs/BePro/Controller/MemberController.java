@@ -133,27 +133,36 @@ public class MemberController {
         Map<String,Object> result = new HashMap();
 
         if(form.getIsEdit()!=null){
-            if(memberService.isEditer(form.getId(),form.getIndex())){
+            if(memberService.isEditer(form.getId(),form.getIndex(), form.getCate())){
                 result.put("editAuth",true);
             }else {
                 result.put("editAuth", false);
             }
         }
         if(form.getIsSignin()!=null){
-            Member member = memberService.findOne(form.getId()).get();
-            if(!member.getToken().isEmpty() && member.getToken().equals(form.getToken())){
-                result.put("signinAuth",true);
-            }else{
+            Optional<Member> optionalMember = memberService.findOne(form.getId());
+            if(optionalMember.isEmpty()){
                 result.put("signinAuth",false);
+            }else{
+                Member member = optionalMember.get();
+                if(member.getToken().isEmpty() || !member.getToken().equals(form.getToken())){
+                    result.put("signinAuth",false);
+                }else{
+                    result.put("signinAuth",true);
+                }
             }
         }
         if(form.getIsAdmin()!=null){
-            Member member = memberService.findOne(form.getId()).get();
-            if(member.getAdmin()==1){
-                result.put("adminAuth",true);
-
-            }else{
+            Optional<Member> optionalMember = memberService.findOne(form.getId());
+            if(optionalMember.isEmpty()){
                 result.put("adminAuth",false);
+            }else {
+                Member member = memberService.findOne(form.getId()).get();
+                if (member.getAdmin() == 1) {
+                    result.put("adminAuth", true);
+                } else {
+                    result.put("adminAuth", false);
+                }
             }
         }
         return result;

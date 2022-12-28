@@ -11,7 +11,7 @@ public interface MemberRepository {
     Optional<Member> findByName(String name);
     List<Member> findAll();
 
-    boolean isUploader(long id, int index);
+    boolean isUploader(long id, String index, String cate);
 
     boolean updateMember(MemberForm form);
 }

@@ -91,10 +91,10 @@ public class MemberService {
     }
 
 
-    public boolean isEditer(String id, int index) {
+    public boolean isEditer(String id, String index, String cate) {
         Optional<Member> member = findOne(id);
         if(!member.isPresent())return false;
-        return memberRepository.isUploader(member.get().getIdNum(), index);
+        return memberRepository.isUploader(member.get().getIdNum(), index, cate);
     }
 
     public boolean updateMemberInfo(MemberForm form) {

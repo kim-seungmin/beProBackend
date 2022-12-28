@@ -108,19 +108,27 @@ public class JdbcMemberRepository implements MemberRepository {
     }
 
     @Override
-    public boolean isUploader(long id, int index) {
-        String sql = "select * from post where post_id = ?";
+    public boolean isUploader(long id, String index, String cate) {
+        //String sql = "select * from ? LEFT JOIN member on  = member.member_idnum WHERE ? = ?";
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
+        String sql = "";
         try {
             conn = getConnection();
+            if(cate.equals("post")){
+                sql = "select * from post left join member on post.post_uploader = member.member_idnum where post.post_id = ?";
+            }else{
+                sql = "select * from comment left join member on comment.comment_member_idnum = member.member_idnum where comment.comment_id = ?";
+            }
             pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, index);
+            pstmt.setLong(1, Long.parseLong(index));
             rs = pstmt.executeQuery();
             if(rs.next()) {
                 Member member = new Member();
-                if(id==rs.getLong("post_uploader")){
+                if(cate.equals("post") && id == rs.getLong("post_uploader")){
+                    return true;
+                }else if(cate.equals("comment") && id==rs.getLong("comment_member_idnum")){
                     return true;
                 }
             }

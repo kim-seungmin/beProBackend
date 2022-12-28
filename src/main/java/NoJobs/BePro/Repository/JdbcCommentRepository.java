@@ -1,12 +1,14 @@
 package NoJobs.BePro.Repository;
 
 import NoJobs.BePro.Domain.Comment;
+import NoJobs.BePro.Domain.Member;
 import NoJobs.BePro.Form.CommentForm;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.Map;
+import java.util.Optional;
 
 public class JdbcCommentRepository implements CommentRepository{
     private final DataSource dataSource;
@@ -26,10 +28,15 @@ public class JdbcCommentRepository implements CommentRepository{
             conn = getConnection();
             pstmt = conn.prepareStatement(sql,
                 Statement.RETURN_GENERATED_KEYS);
-            pstmt.setLong(1, memberRepository.findByName(form.getCommentNick()).get().getIdNum());
+            if(form.getCommentId().length()==0){
+                pstmt.setLong(1, 0);
+            }else{
+                pstmt.setLong(1, memberRepository.findById(form.getCommentId()).get().getIdNum());
+            }
             pstmt.setInt(2, form.getId());
             pstmt.setString(3,form.getCommentDetail());
-            if(form.isAnony()){
+
+            if(form.getIsAnony()){
                 pstmt.setInt(4,1);
             }else{
                 pstmt.setInt(4,0);
