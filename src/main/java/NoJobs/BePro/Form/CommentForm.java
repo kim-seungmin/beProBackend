@@ -32,8 +32,14 @@ public class CommentForm {
         this.commentDetail = commentDetail;
     }
 
-    public boolean isAnony() {
+    /*public boolean isAnony() {
         return isAnony;
+    }*/
+    public boolean getIsAnony(){
+        return this.isAnony;
+    }
+    public void setIsAnony(boolean isAnony){
+        this.isAnony = isAnony;
     }
 
     public void setAnony(boolean anony) {
