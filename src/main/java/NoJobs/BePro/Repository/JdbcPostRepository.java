@@ -62,7 +62,6 @@ public class JdbcPostRepository implements PostRepository {
 
     @Override
     public List<Post> findBytitleAndTag(String title, String[] tags) {
-
         if (tags.length == 0) {
             String sql = "SELECT * FROM post LEFT JOIN member ON post.post_uploader = member.member_idnum WHERE post.post_title LIKE ?";
             Connection conn = null;
@@ -321,9 +320,9 @@ public class JdbcPostRepository implements PostRepository {
     @Override
     public void updatePost(PostForm form, String category) {
         MemberRepository memberRepository = new JdbcMemberRepository(dataSource);
-        Member uploader = memberRepository.findById(form.getUploaderId()).get();
+        //Member uploader = memberRepository.findById(form.getUploaderId()).get();
 
-        String sql = "UPDATE post SET post_title = ?, post_uploader = ?, post_detail = ?, post_category = ? WHERE post_id = ?";
+        String sql = "UPDATE post SET post_title = ?, post_detail = ?, post_category = ? WHERE post_id = ?";
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -332,10 +331,9 @@ public class JdbcPostRepository implements PostRepository {
             pstmt = conn.prepareStatement(sql,
                     Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, form.getTitle());
-            pstmt.setLong(2, uploader.getIdNum());
-            pstmt.setString(3, form.getDetail());
-            pstmt.setString(4, category);
-            pstmt.setString(5, form.getId());
+            pstmt.setString(2, form.getDetail());
+            pstmt.setString(3, category);
+            pstmt.setString(4, form.getId());
             pstmt.execute();
             rs = pstmt.getGeneratedKeys();
 
