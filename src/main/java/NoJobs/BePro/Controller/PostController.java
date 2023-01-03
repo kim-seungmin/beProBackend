@@ -20,8 +20,9 @@ public class PostController {
         this.postService = postService;
     }
 
-    @PostMapping("/search")
+    @PostMapping("/post/searchquery")
     public List<Post> searchEveryHashtag(@RequestBody SearchForm form){
+
         return postService.searchByTitleAndTag(form.getInputValue(), form.getHashTags());
     }
     @PostMapping("/board/main")
