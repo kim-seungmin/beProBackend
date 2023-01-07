@@ -8,6 +8,8 @@ public class MemberForm {
     private boolean isPro;
     private String major;
 
+    private String oldId;
+
     public String getNick() {
         return nick;
     }
@@ -55,4 +57,8 @@ public class MemberForm {
     public void setMajor(String major) {
         this.major = major;
     }
+
+    public String getOldId(){ return oldId; }
+
+    public void setOldId(String oldId){ this.oldId = oldId; }
 }

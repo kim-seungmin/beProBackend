@@ -37,7 +37,7 @@ public class MemberController {
             result.put("major", null);
             return result;
         }else{
-            if(resultMember.get().getName().equals("fail")){
+            if(resultMember.get().getName().equals("fail") || resultMember.get().getToken().equals("fail")){
                 result.put("loginSuccess", false);
                 result.put("nick", null);
                 result.put("msg", "로그인에 실패하였습니다.");
@@ -50,17 +50,15 @@ public class MemberController {
             }
             result.put("loginSuccess", true);
             result.put("nick", resultMember.get().getName());
-            result.put("id", resultMember.get().getName());
-            result.put("email", resultMember.get().getName());
-            if(resultMember.get().getMajor()==null){
-                result.put("isPro", false);
-                result.put("major", null);
-            }else{
-                result.put("isPro", true);
+            result.put("id", resultMember.get().getId());
+            result.put("email", resultMember.get().getEmail());
+            result.put("isPro", resultMember.get().getPro());
+            result.put("cookie", resultMember.get().getToken());
+            if(resultMember.get().getPro()){
                 result.put("major", resultMember.get().getMajor());
+            }else{
+                result.put("major", null);
             }
-
-
             result.put("msg", "로그인에 성공했습니다.");
             result.put("cookie", resultMember.get().getToken());
         }
