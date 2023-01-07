@@ -66,7 +66,9 @@ public class MemberService {
             return resultMember;
         }
         resultMember.get().setName(DBMember.get().getName());
-
+        resultMember.get().setEmail(DBMember.get().getEmail());
+        resultMember.get().setPro(DBMember.get().getPro());
+        resultMember.get().setMajor(DBMember.get().getMajor());
         //비밀번호검증
         member.setPassword(st.makePassword(member.getPassword(),member.getId()));
         if(!Objects.equals(member.getPassword(), DBMember.get().getPassword())){

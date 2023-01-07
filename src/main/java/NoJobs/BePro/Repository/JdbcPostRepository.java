@@ -408,11 +408,14 @@ public class JdbcPostRepository implements PostRepository {
                 Map result = new HashMap<String, Object>();
                 result.put("title",rs.getString("post_title"));
                 result.put("id",rs.getInt("post_id"));
+                result.put("uploaderNick",rs.getString("member_nickname"));
+                result.put("uploaderId",rs.getString("member_id"));
                 result.put("view",rs.getInt("post_view"));
                 result.put("uploadtime",rs.getString("post_uploadtime"));
                 result.put("detail",rs.getString("post_detail"));
                 result.put("tags",getTagById(rs.getString("post_id")));
                 result.put("category", rs.getString("post_category"));
+                result.put("comment", getCommnetyId(rs.getString("post_id")));
                 result.put("like",rs.getInt("post_like"));;
                 resultList.add(result);
             }

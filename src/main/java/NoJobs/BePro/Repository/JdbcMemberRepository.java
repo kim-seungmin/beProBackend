@@ -2,6 +2,7 @@ package NoJobs.BePro.Repository;
 
 import NoJobs.BePro.Domain.Member;
 import NoJobs.BePro.Form.MemberForm;
+import NoJobs.BePro.Tool.SecureTool;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import javax.sql.DataSource;
 import java.sql.*;
@@ -63,9 +64,11 @@ public class JdbcMemberRepository implements MemberRepository {
             if(rs.next()) {
                 Member member = new Member();
                 member.setId(rs.getString("member_id"));
+                member.setEmail(rs.getString("member_email"));
                 member.setPassword(rs.getString("member_password"));
                 member.setName(rs.getString("member_nickname"));
                 member.setIdNum(rs.getLong("member_idnum"));
+                member.setPro(rs.getBoolean("member_isPro"));
                 member.setMajor(rs.getString("member_major"));
                 member.setToken(rs.getString("member_token"));
                 member.setAdmin(rs.getInt("member_admin"));
@@ -142,15 +145,18 @@ public class JdbcMemberRepository implements MemberRepository {
 
     @Override
     public boolean updateMember(MemberForm form) {
-        String sql = "UPDATE post SET member_password = ?, member_email = ?, member_nickname = ?, member_major = ?, member_isPro = ? WHERE member_id = ?";
+        String sql = "UPDATE member SET member_password = ?, member_email = ?, member_nickname = ?, member_major = ?, member_isPro = ?, member_token=NULL, member_id = ? WHERE member_id = ?";
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
+
         try {
+            SecureTool st = new SecureTool();
             conn = getConnection();
             pstmt = conn.prepareStatement(sql,
                     Statement.RETURN_GENERATED_KEYS);
-            pstmt.setString(1, form.getPw());
+            //pstmt.setString(1, form.getPw());
+            pstmt.setString(1, st.makePassword(form.getPw(),form.getId()));
             pstmt.setString(2, form.getEmail());
             pstmt.setString(3, form.getNick());
             pstmt.setString(4, form.getMajor());
@@ -160,6 +166,8 @@ public class JdbcMemberRepository implements MemberRepository {
                 pstmt.setInt(5, 0);
             }
             pstmt.setString(6, form.getId());
+            pstmt.setString(7, form.getOldId());
+
             pstmt.execute();
             rs = pstmt.getGeneratedKeys();
             return true;
