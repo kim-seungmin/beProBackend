@@ -4,9 +4,15 @@ import NoJobs.BePro.Domain.Member;
 import NoJobs.BePro.Domain.Post;
 import NoJobs.BePro.Form.PostForm;
 import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.*;
 
 public class JdbcPostRepository implements PostRepository {
@@ -35,16 +41,18 @@ public class JdbcPostRepository implements PostRepository {
             pstmt.setString(2, board);
             rs = pstmt.executeQuery();
             if(rs.next()) {
+                setViewValue(id);
                 reslut.put("title", rs.getString("post_title"));
                 reslut.put("id", rs.getString("post_id"));
                 reslut.put("uploaderNick", rs.getString("member_nickname"));
                 reslut.put("uploaderId",rs.getString("member_id"));
-                reslut.put("view", rs.getString("post_view"));
+                reslut.put("view", getViewValue(id));
                 reslut.put("uploadtime", rs.getString("post_uploadtime"));
-                reslut.put("like", rs.getString("post_like"));
                 reslut.put("detail", rs.getString("post_detail"));
                 reslut.put("tags", getTagById(rs.getString("post_id")));
                 reslut.put("comment", getCommnetyId(rs.getString("post_id")));
+
+
                 return reslut;
             }
             return null;
@@ -80,8 +88,7 @@ public class JdbcPostRepository implements PostRepository {
                     post.setUploaderNike(rs.getString("member_nickname"));
                     post.setUploadtime(rs.getString("post_uploadtime"));
                     post.setDetail(rs.getString("post_detail"));
-                    post.setView(rs.getInt("post_view"));
-                    post.setLike(rs.getInt("post_like"));
+                    post.setView(getViewValue(rs.getLong("post_id")));
                     post.setCategory(rs.getString("post_category"));
                     post.setTags(getTagById(rs.getString("post_id")));
                     posts.add(post);
@@ -119,8 +126,7 @@ public class JdbcPostRepository implements PostRepository {
                     post.setUploaderNike(rs.getString("member_nickname"));
                     post.setUploadtime(rs.getString("post_uploadtime"));
                     post.setDetail(rs.getString("post_detail"));
-                    post.setView(rs.getInt("post_view"));
-                    post.setLike(rs.getInt("post_like"));
+                    post.setView(getViewValue(rs.getLong("post_id")));
                     post.setCategory(rs.getString("post_category"));
                     post.setTags(getTagById(rs.getString("post_id")));
                     posts.add(post);
@@ -225,8 +231,7 @@ public class JdbcPostRepository implements PostRepository {
                     post.setUploaderId(rs.getString("member_id"));
                     post.setUploadtime(rs.getString("post_uploadtime"));
                     post.setDetail(rs.getString("post_detail"));
-                    post.setView(rs.getInt("post_view"));
-                    post.setLike(rs.getInt("post_like"));
+                    post.setView(getViewValue(rs.getLong("post_id")));
                     post.setCategory(rs.getString("post_category"));
                     post.setTags(getTagById(rs.getString("post_id")));
                     posts.add(post);
@@ -242,14 +247,15 @@ public class JdbcPostRepository implements PostRepository {
 
     @Override
     public List<Post> findByView(long start, long end, String category) {
-        String sql = "SELECT * FROM post LEFT JOIN member ON post.post_uploader = member.member_idnum WHERE post_category = ? ORDER BY post_view DESC";
+        String sql = "SELECT post.*,member.member_nickname, COUNT(view.ip) AS COUNT FROM post LEFT JOIN view ON post.post_id = view.post_id LEFT JOIN member ON post.post_uploader = member.member_idnum WHERE view.lifetime > ? GROUP BY post.post_id ORDER BY COUNT desc LIMIT 10";
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
             conn = getConnection();
             pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, category);
+            LocalDate today = LocalDate.now();
+            pstmt.setString(1,today.toString());
             rs = pstmt.executeQuery();
             List<Post> posts = new ArrayList<>();
             for(long i=0;i<start;i++){
@@ -262,8 +268,7 @@ public class JdbcPostRepository implements PostRepository {
                     post.setTitle(rs.getString("post_title"));
                     post.setUploaderNike(rs.getString("member_nickname"));
                     post.setUploadtime(rs.getString("post_uploadtime"));
-                    post.setView(rs.getInt("post_view"));
-                    post.setLike(rs.getInt("post_like"));
+                    post.setView(rs.getLong("COUNT"));
                     posts.add(post);
                 }else{ return posts;}
             }
@@ -378,9 +383,8 @@ public class JdbcPostRepository implements PostRepository {
                 result.put("title",rs.getString("post_title"));
                 result.put("id",rs.getInt("post_id"));
                 result.put("uploaderNick",rs.getString("member_nickname"));
-                result.put("view",rs.getInt("post_view"));
+                result.put("view",getViewValue(rs.getLong("post_id")));
                 result.put("uploadtime",rs.getString("post_uploadtime"));
-                result.put("like",rs.getInt("post_like"));;
                 resultList.add(result);
             }
             return resultList;
@@ -410,16 +414,80 @@ public class JdbcPostRepository implements PostRepository {
                 result.put("id",rs.getInt("post_id"));
                 result.put("uploaderNick",rs.getString("member_nickname"));
                 result.put("uploaderId",rs.getString("member_id"));
-                result.put("view",rs.getInt("post_view"));
+                result.put("view",getViewValue(rs.getLong("post_id")));
                 result.put("uploadtime",rs.getString("post_uploadtime"));
                 result.put("detail",rs.getString("post_detail"));
                 result.put("tags",getTagById(rs.getString("post_id")));
                 result.put("category", rs.getString("post_category"));
                 result.put("comment", getCommnetyId(rs.getString("post_id")));
-                result.put("like",rs.getInt("post_like"));;
                 resultList.add(result);
             }
             return resultList;
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        } finally {
+            close(conn, pstmt, rs);
+        }
+    }
+    public int getViewValue(Long post_id){
+        String sql = "SELECT COUNT(ip) as COUNT FROM view WHERE post_id = ? ";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        int views = 0;
+        try {
+            conn = getConnection();
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setLong(1, post_id);
+            rs = pstmt.executeQuery();
+            rs.next();
+            views = rs.getInt("COUNT");
+            return views;
+        } catch (Exception e) {
+            throw new IllegalStateException(e);
+        } finally {
+            close(conn, pstmt, rs);
+        }
+    }
+    private String getClientIp(){
+        HttpServletRequest req = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        String ip = req.getHeader("X-FORWARDED-FOR");
+        if (ip == null) {
+            ip = req.getRemoteAddr();
+        }
+        return ip;
+    }
+    public void setViewValue(Long post_id){
+        String ip = getClientIp();
+        String inquireSql = "SELECT COUNT(*) as COUNT FROM view WHERE ip=? AND post_id=?";
+        String insertSql = "INSERT INTO view (ip, post_id, lifetime) VALUES (?,?,?)";
+        String deleteSql = "DELETE FROM view WHERE ? > lifetime";
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        LocalDate today = LocalDate.now();
+        Long count;
+        try {
+            conn = getConnection();
+            pstmt = conn.prepareStatement(deleteSql);
+            pstmt.setString(1, today.toString());
+            pstmt.execute();
+            pstmt = conn.prepareStatement(inquireSql);
+            pstmt.setString(1, ip);
+            pstmt.setLong(2, post_id);
+            rs = pstmt.executeQuery();
+            rs.next();
+            count = rs.getLong("COUNT");
+
+            if(count == 0){
+
+                LocalDate newDate = today.plusYears(1);
+                pstmt = conn.prepareStatement(insertSql);
+                pstmt.setString(1, ip);
+                pstmt.setLong(2, post_id);
+                pstmt.setString(3, newDate.toString());
+                pstmt.execute();
+            }
         } catch (Exception e) {
             throw new IllegalStateException(e);
         } finally {
